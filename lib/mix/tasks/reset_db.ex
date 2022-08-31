@@ -3,8 +3,9 @@ defmodule Mix.Tasks.ResetDb do
 
   use Mix.Task
 
-  def run(_) do
-    {:ok, conn} = Exqlite.Sqlite3.open("db/poems.db")
+  # `mix reset_db db/ukr_poems.db`
+  def run([db_name]) do
+    {:ok, conn} = Exqlite.Sqlite3.open(db_name)
     drop_tables!(conn)
   end
 end

@@ -30,3 +30,5 @@ poem_bot-*.tar
 /static/
 /db/
 /test/test.db
+crontab_exec.sh
+raspberry-pi-setup.md

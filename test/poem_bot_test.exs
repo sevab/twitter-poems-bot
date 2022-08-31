@@ -67,8 +67,10 @@ defmodule PoemBotTest do
                  "Усе-усе чакаюць,",
                  "Калі-калі крумкач той",
                  "Што збаіць ім, што збаіць.",
-                 "\n– Максім Танк, 1967",
-                 "\n\n#УкрТві #БелТві"
+                 "\n",
+                 "Максім Танк",
+                 "1967",
+                 "\n#УкрТві #БелТві"
                ]
     end
 
@@ -97,8 +99,9 @@ defmodule PoemBotTest do
                  "Усе-усе чакаюць,",
                  "Калі-калі крумкач той",
                  "Што збаіць ім, што збаіць.",
-                 "\n– Максім Танк",
-                 "\n\n#УкрТві #БелТві"
+                 "\n",
+                 "Максім Танк",
+                 "\n#УкрТві #БелТві"
                ]
     end
   end
@@ -123,8 +126,9 @@ defmodule PoemBotTest do
                  "Бы сівізна на скронях,",
                  "Жоўтыя лісточкі",
                  "Ляцяць долу... Шолах...",
-                 "\n– Юрась Півуноў",
-                 "\n\n#УкрТві #БелТві"
+                 "\n",
+                 "Юрась Півуноў",
+                 "\n#УкрТві #БелТві"
                ]
              ]
     end
@@ -162,8 +166,10 @@ defmodule PoemBotTest do
                  "Усе-усе чакаюць,",
                  "Калі-калі крумкач той",
                  "Што збаіць ім, што збаіць.",
-                 "\n– Максім Танк, 1967",
-                 "\n\n#УкрТві #БелТві"
+                 "\n",
+                 "Максім Танк",
+                 "1967",
+                 "\n#УкрТві #БелТві"
                ]
              ]
     end
@@ -194,7 +200,8 @@ defmodule PoemBotTest do
 
     # No tweet history prior to this
     {:ok, statement} = Exqlite.Sqlite3.prepare(conn, "select * from tweets;")
-    :done = Exqlite.Sqlite3.step(conn, statement) # i.e. no results
+    # i.e. no results
+    :done = Exqlite.Sqlite3.step(conn, statement)
     :ok = Exqlite.Sqlite3.release(conn, statement)
 
     DbHelpers.mark_poem_as_tweeted!(conn, poem)

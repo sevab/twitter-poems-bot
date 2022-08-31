@@ -6,7 +6,7 @@ defmodule DbHelpers do
     {:ok, statement} =
       Sqlite3.prepare(
         conn,
-        "SELECT * FROM poems WHERE tweeted_at IS NULL AND length(body) < 1400 ORDER BY RANDOM() LIMIT 1"
+        "SELECT * FROM poems WHERE tweeted_at IS NULL AND length(body) < 1800 ORDER BY RANDOM() LIMIT 1"
       )
 
     get_poem_from_statement!(conn, statement)
@@ -57,6 +57,26 @@ defmodule DbHelpers do
       Sqlite3.prepare(conn, "INSERT INTO authors (external_id, name) VALUES (?1, ?2)")
 
     :ok = Sqlite3.bind(conn, statement, author)
+    :done = Sqlite3.step(conn, statement)
+    :ok = Sqlite3.release(conn, statement)
+  end
+
+  def get_author_by_name!(conn, name) do
+    {:ok, statement} = Sqlite3.prepare(conn, "SELECT * FROM authors WHERE name = ?")
+    :ok = Sqlite3.bind(conn, statement, [name])
+    {:row, author} = Sqlite3.step(conn, statement)
+    :ok = Sqlite3.release(conn, statement)
+    author_arr_to_struct(author)
+  end
+
+  def insert_author_if_not_exists(conn, author_name) do
+    {:ok, statement} =
+      Sqlite3.prepare(
+        conn,
+        "INSERT OR REPLACE INTO authors (id, external_id, name) VALUES ((SELECT id FROM authors WHERE NAME = ?1), NULL, ?2);"
+      )
+
+    :ok = Sqlite3.bind(conn, statement, [author_name, author_name])
     :done = Sqlite3.step(conn, statement)
     :ok = Sqlite3.release(conn, statement)
   end

@@ -1,10 +1,11 @@
-defmodule Mix.Tasks.CreateAndImportDb do
+defmodule Mix.Tasks.ImportBelDb do
   import DbHelpers
+  import ParseHelpers
 
   use Mix.Task
 
   def run(_) do
-    {:ok, conn} = Exqlite.Sqlite3.open("db/poems.db")
+    {:ok, conn} = Exqlite.Sqlite3.open("db/bel_poems.db")
     DbHelpers.drop_tables!(conn)
     DbHelpers.create_tables!(conn)
 
@@ -59,11 +60,6 @@ defmodule Mix.Tasks.CreateAndImportDb do
     year = nil_or_str(year)
 
     [id, link, title, body, year, author_id]
-  end
-
-  defp nil_or_str(str) do
-    str = String.trim(str)
-    if str == "", do: nil, else: str
   end
 
   defp read_json_from_file(file_path) do

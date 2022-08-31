@@ -26,18 +26,10 @@ defmodule PoemBot do
       |> Enum.map(fn s -> String.trim(s) end)
 
     poem_arr = if poem.title, do: ["«#{poem.title}»" | poem_arr], else: poem_arr
-
-    poem_arr =
-      if author.name do
-        author_year_str =
-          if poem.year, do: "\n– #{author.name}, #{poem.year}", else: "\n– #{author.name}"
-
-        poem_arr ++ [author_year_str]
-      else
-        if poem.year, do: poem_arr ++ ["\n#{poem.year}"], else: poem_arr
-      end
-
-    poem_arr ++ ["\n\n#{hashtags}"]
+    poem_arr = poem_arr ++ ["\n"]
+    poem_arr = if author.name, do: poem_arr ++ ["#{author.name}"], else: poem_arr
+    poem_arr = if poem[:year], do: poem_arr ++ ["#{poem[:year]}"], else: poem_arr
+    poem_arr ++ ["\n#{hashtags}"]
   end
 
   def split_text_into_threads(arr) do
