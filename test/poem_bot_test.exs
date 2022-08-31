@@ -40,12 +40,12 @@ defmodule PoemBotTest do
     %{external_id: "1423", id: 1, name: "Юрась Півуноў"}
   end
 
-  describe "prepare_tweet_text/3" do
+  describe "prepare_poem_text/3" do
     test "renders when all attributes present (also tests that removes whitespace in body)" do
       poem = poem_1()
       author = author_1()
 
-      assert PoemBot.prepare_tweet_text(poem: poem, author: author, hashtags: "#УкрТві #БелТві") ==
+      assert PoemBot.prepare_poem_text(poem: poem, author: author, hashtags: "#УкрТві #БелТві") ==
                [
                  "«У цёмнай-цёмнай пушчы»",
                  "У цёмнай-цёмнай пушчы,",
@@ -78,7 +78,7 @@ defmodule PoemBotTest do
       poem = poem_1() |> Map.put(:title, nil) |> Map.put(:year, nil)
       author = author_1()
 
-      assert PoemBot.prepare_tweet_text(poem: poem, author: author, hashtags: "#УкрТві #БелТві") ==
+      assert PoemBot.prepare_poem_text(poem: poem, author: author, hashtags: "#УкрТві #БелТві") ==
                [
                  "У цёмнай-цёмнай пушчы,",
                  "На цяглай-цяглай туі,",
@@ -109,7 +109,7 @@ defmodule PoemBotTest do
   describe "split_text_into_threads/1" do
     test "1-tweet thread" do
       threads =
-        PoemBot.prepare_tweet_text(
+        PoemBot.prepare_poem_text(
           poem: poem_2(),
           author: author_2(),
           hashtags: "#УкрТві #БелТві"
@@ -135,7 +135,7 @@ defmodule PoemBotTest do
 
     test "splits long poems into multiple threads" do
       threads =
-        PoemBot.prepare_tweet_text(
+        PoemBot.prepare_poem_text(
           poem: poem_1(),
           author: author_1(),
           hashtags: "#УкрТві #БелТві"

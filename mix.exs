@@ -25,7 +25,8 @@ defmodule PoemBot.MixProject do
       {:jason, "~> 1.3"},
       {:oauther, "~> 1.1"},
       {:extwitter, "~> 0.13"},
-      {:exqlite, "~> 0.11.4"}
+      {:exqlite, "~> 0.11.4"},
+      {:telegram, git: "https://github.com/visciang/telegram.git", tag: "0.20.3"}
     ]
   end
 end

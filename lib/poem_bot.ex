@@ -1,13 +1,13 @@
 defmodule PoemBot do
   import DbHelpers
 
-  def tweet(db_name: db_name, hashtags: hashtags) do
+  def post(db_name: db_name, hashtags: hashtags, telegram_channel: telegram_channel) do
     {:ok, conn} = Exqlite.Sqlite3.open(db_name)
 
     poem = get_random_poem!(conn)
     author = get_author_by_id!(conn, poem.author_id)
 
-    prepare_tweet_text(
+    prepare_poem_text(
       poem: poem,
       author: author,
       hashtags: hashtags
@@ -15,10 +15,17 @@ defmodule PoemBot do
     |> split_text_into_threads()
     |> tweet_a_thread()
 
+    prepare_poem_text(
+      poem: poem,
+      author: author,
+      hashtags: nil
+    )
+    |> post_to_telegram(telegram_channel)
+
     mark_poem_as_tweeted!(conn, poem)
   end
 
-  def prepare_tweet_text(poem: poem, author: author, hashtags: hashtags) do
+  def prepare_poem_text(poem: poem, author: author, hashtags: hashtags) do
     # Trim leading and trailing whitespaces:
     poem_arr =
       poem.body
@@ -29,7 +36,7 @@ defmodule PoemBot do
     poem_arr = poem_arr ++ ["\n"]
     poem_arr = if author.name, do: poem_arr ++ ["#{author.name}"], else: poem_arr
     poem_arr = if poem[:year], do: poem_arr ++ ["#{poem[:year]}"], else: poem_arr
-    poem_arr ++ ["\n#{hashtags}"]
+    if hashtags, do: poem_arr ++ ["\n#{hashtags}"], else: poem_arr
   end
 
   def split_text_into_threads(arr) do
@@ -63,6 +70,17 @@ defmodule PoemBot do
       tweet.id
     end)
 
-    :ok
+    arr
+  end
+
+  def post_to_telegram(arr, telegram_channel) do
+    post_body = Enum.join(arr, "\n")
+    token = System.get_env("POEM_TELEGRAM_TOKEN")
+
+    Telegram.Api.request(token, "sendMessage",
+      chat_id: telegram_channel,
+      text: post_body
+    )
+
   end
 end
